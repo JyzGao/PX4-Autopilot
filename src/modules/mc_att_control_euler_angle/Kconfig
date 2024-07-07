@@ -1,0 +1,12 @@
+menuconfig MODULES_MC_ATT_CONTROL_EULER_ANGLE
+	bool "mc_att_control_euler_angle"
+	default n
+	---help---
+		Enable support for mc_att_control_euler_angle
+
+menuconfig USER_MC_ATT_CONTROL_EULER_ANGLE
+	bool "mc_att_control_euler_angle running as userspace module"
+	default n
+	depends on BOARD_PROTECTED && MODULES_MC_ATT_CONTROL_EULER_ANGLE
+	---help---
+		Put mc_att_control_euler_angle in userspace memory

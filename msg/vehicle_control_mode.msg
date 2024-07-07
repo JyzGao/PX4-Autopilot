@@ -2,6 +2,7 @@ uint64 timestamp		# time since system start (microseconds)
 bool flag_armed			# synonym for actuator_armed.armed
 
 bool flag_multicopter_position_control_enabled
+bool flag_vtol_ndi_control_enabled
 
 bool flag_control_manual_enabled		# true if manual input is mixed in
 bool flag_control_auto_enabled			# true if onboard autopilot should act

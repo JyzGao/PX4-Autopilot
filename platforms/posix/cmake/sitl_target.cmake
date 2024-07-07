@@ -143,6 +143,10 @@ set(debuggers
 
 set(models
 	none
+	amov_quadx
+	amov_quadx_tt
+	amov_quadx_euler
+	amov_quadx_ndi
 	believer
 	boat
 	cloudship
@@ -158,6 +162,8 @@ set(models
 	iris_opt_flow_mockup
 	iris_rplidar
 	iris_vision
+	mugin2930
+	mugin2930_ndi
 	nxp_cupcar
 	plane
 	plane_cam
@@ -185,10 +191,14 @@ set(worlds
 	empty
 	ksql_airport
 	mcmillan_airfield
+	ocean
 	sonoma_raceway
 	warehouse
 	windy
 	yosemite
+	hitl_iris
+	hitl_standard_vtol
+	sjtu
 )
 
 set(all_posix_vmd_make_targets)

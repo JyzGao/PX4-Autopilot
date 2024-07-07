@@ -142,6 +142,8 @@ public:
 	bool init();
 
 private:
+	// bool flag = vehicle_command_s::CTRL_SWITCH_PID;
+
 	void Run() override;
 
 	orb_advert_t	_mavlink_log_pub{nullptr};

@@ -1,0 +1,12 @@
+menuconfig MODULES_ZERO_INPUT_PLANT
+	bool "zero_input_plant"
+	default n
+	---help---
+		Enable support for zero_input_plant
+
+menuconfig USER_ZERO_INPUT_PLANT
+	bool "zero_input_plant running as userspace module"
+	default n
+	depends on BOARD_PROTECTED && MODULES_ZERO_INPUT_PLANT
+	---help---
+		Put zero_input_plant in userspace memory

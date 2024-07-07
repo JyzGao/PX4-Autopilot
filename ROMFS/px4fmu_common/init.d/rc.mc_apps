@@ -59,12 +59,22 @@ fi
 #
 # Start Multicopter Rate Controller.
 #
-mc_rate_control start
+if param compare SYS_AUTOSTART 1065 || param compare SYS_AUTOSTART 4023
+then
+	mc_rate_control_ndi start
+else
+	mc_rate_control start
+fi
 
 #
 # Start Multicopter Attitude Controller.
 #
-mc_att_control start
+if param compare SYS_AUTOSTART 1064 || param compare SYS_AUTOSTART 4022
+then
+	mc_att_control_euler_angle start
+else
+	mc_att_control start
+fi
 
 if param greater -s MC_AT_EN 0
 then

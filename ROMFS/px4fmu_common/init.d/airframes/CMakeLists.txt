@@ -74,6 +74,9 @@ px4_add_romfs_files(
 	4017_nxp_hovergames
 	4019_x500_v2
 	4020_holybro_px4vision_v1_5
+	4021_amov_quadx
+	4022_amov_quadx_euler
+	4023_amov_quadx_ndi
 	4030_3dr_solo
 	4031_3dr_quad
 	4040_reaper

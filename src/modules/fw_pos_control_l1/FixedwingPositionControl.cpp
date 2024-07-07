@@ -271,6 +271,64 @@ FixedwingPositionControl::vehicle_command_poll()
 			}
 
 		}
+		// if (vehicle_command.command ==  vehicle_command_s::VEHICLE_CMD_NDI_PID) {
+		// 	const int8_t ctrl_switch = static_cast<int8_t>(lroundf(vehicle_command.param1));
+		// 	if(ctrl_switch == vehicle_command_s::CTRL_SWITCH_NDI && ctrl_switch == !flag)
+		// 	{
+		// 		flag = !flag;
+		// 		printf("NDI control has been activated!\n");
+		// 	}
+		// 	else if(ctrl_switch == vehicle_command_s::CTRL_SWITCH_PID && ctrl_switch == !flag)
+		// 	{
+		// 		flag = !flag;
+		// 		printf("PID control has been activated!\n");
+		// 	}
+		// 	else if(ctrl_switch == flag)
+		// 	{
+		// 		// do nothing
+		// 		if(ctrl_switch)
+		// 			printf("Already in NDI control!\n");
+		// 		else
+		// 			printf("Already in PID control!\n");
+		// 	}
+		// 	else
+		// 	{
+		// 		printf("Incorrect control switch signal!\n");
+		// 	}
+
+			// vehicle_status_s vehicle_status{};
+			// _vehicle_status_sub.copy(&vehicle_status);
+
+			// uint8_t result = vehicle_command_ack_s::VEHICLE_RESULT_ACCEPTED;
+
+			// const int transition_command_param1 = int(vehicle_command.param1 + 0.5f);
+
+			// // deny transition from MC to FW in Takeoff, Land, RTL and Orbit
+			// if (transition_command_param1 == vtol_vehicle_status_s::VEHICLE_VTOL_STATE_FW &&
+			//     (vehicle_status.nav_state == vehicle_status_s::NAVIGATION_STATE_AUTO_TAKEOFF
+			//      || vehicle_status.nav_state == vehicle_status_s::NAVIGATION_STATE_AUTO_LAND
+			//      || vehicle_status.nav_state == vehicle_status_s::NAVIGATION_STATE_AUTO_RTL
+			//      ||  vehicle_status.nav_state == vehicle_status_s::NAVIGATION_STATE_ORBIT)) {
+
+			// 	result = vehicle_command_ack_s::VEHICLE_RESULT_TEMPORARILY_REJECTED;
+
+			// } else {
+			// 	_transition_command = transition_command_param1;
+			// 	_immediate_transition = (PX4_ISFINITE(vehicle_command.param2)) ? int(vehicle_command.param2 + 0.5f) : false;
+			// }
+
+			// if (vehicle_command.from_external) {
+			// 	vehicle_command_ack_s command_ack{};
+			// 	command_ack.timestamp = hrt_absolute_time();
+			// 	command_ack.command = vehicle_command.command;
+			// 	command_ack.result = result;
+			// 	command_ack.target_system = vehicle_command.source_system;
+			// 	command_ack.target_component = vehicle_command.source_component;
+
+			// 	uORB::Publication<vehicle_command_ack_s> command_ack_pub{ORB_ID(vehicle_command_ack)};
+			// 	command_ack_pub.publish(command_ack);
+			// }
+		// }
 	}
 }
 
@@ -2372,7 +2430,7 @@ FixedwingPositionControl::Run()
 
 				}
 
-				if (PX4_ISFINITE(trajectory_setpoint.vx) && PX4_ISFINITE(trajectory_setpoint.vx)
+				if (PX4_ISFINITE(trajectory_setpoint.vx) && PX4_ISFINITE(trajectory_setpoint.vy)
 				    && PX4_ISFINITE(trajectory_setpoint.vz)) {
 					valid_setpoint = true;
 					_pos_sp_triplet.current.type = position_setpoint_s::SETPOINT_TYPE_POSITION;
@@ -2432,7 +2490,7 @@ FixedwingPositionControl::Run()
 
 		set_control_mode_current(_local_pos.timestamp, _pos_sp_triplet.current.valid);
 
-		_att_sp.fw_control_yaw = false;		// by default we don't want yaw to be contoller directly with rudder
+		_att_sp.fw_control_yaw = false;		// by default we don't want yaw to be controlled directly with rudder
 
 		switch (_control_mode_current) {
 		case FW_POSCTRL_MODE_AUTO: {

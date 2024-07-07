@@ -76,6 +76,8 @@
 #include <cstring>
 #include <matrix/math.hpp>
 
+#include <uORB/Subscription.hpp>
+#include <uORB/Publication.hpp>
 #include <uORB/topics/mavlink_log.h>
 #include <uORB/topics/tune_control.h>
 
@@ -351,6 +353,18 @@ int Commander::custom_command(int argc, char *argv[])
 					     vtol_vehicle_status_s::VEHICLE_VTOL_STATE_FW :
 					     vtol_vehicle_status_s::VEHICLE_VTOL_STATE_MC), 0.0f);
 
+		return 0;
+	}
+
+	if (!strcmp(argv[0], "ndi")) {
+		send_vehicle_command(vehicle_command_s::VEHICLE_CMD_NDI_PID,
+				     static_cast<float>(vehicle_command_s::CTRL_SWITCH_NDI));
+		return 0;
+	}
+
+	if (!strcmp(argv[0], "pid")) {
+		send_vehicle_command(vehicle_command_s::VEHICLE_CMD_NDI_PID,
+				     static_cast<float>(vehicle_command_s::CTRL_SWITCH_PID));
 		return 0;
 	}
 
@@ -823,6 +837,9 @@ Commander::Commander() :
 	// default for vtol is rotary wing
 	_vtol_status.vtol_in_rw_mode = true;
 
+	// default control method: PID
+	_status.in_ndi = false;
+
 	_vehicle_gps_position_valid.set_hysteresis_time_from(false, GPS_VALID_TIME);
 	_vehicle_gps_position_valid.set_hysteresis_time_from(true, GPS_VALID_TIME);
 }
@@ -1033,6 +1050,47 @@ Commander::handle_command(const vehicle_command_s &cmd)
 						set_home_position();
 					}
 				}
+			}
+		}
+		break;
+
+	case vehicle_command_s::VEHICLE_CMD_NDI_PID: {
+			uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};
+			if(_vehicle_status_sub.update(&_status)){
+			// _vehicle_status_sub.copy(&_status);
+
+			cmd_result = vehicle_command_s::VEHICLE_CMD_RESULT_DENIED;
+
+			const int8_t ctrl_switch = static_cast<int8_t>(lroundf(cmd.param1));
+
+			// deny transition between PID and NDI in ALL flight modes EXCEPT position mode
+			if (_status.nav_state == vehicle_status_s::NAVIGATION_STATE_POSCTL) {
+				cmd_result = vehicle_command_s::VEHICLE_CMD_RESULT_ACCEPTED;
+				if(ctrl_switch == vehicle_command_s::CTRL_SWITCH_NDI && ctrl_switch != _status.in_ndi)
+				{
+					_status.in_ndi = vehicle_command_s::CTRL_SWITCH_NDI;
+					PX4_INFO("NDI control has been activated!");
+				}
+				else if(ctrl_switch == vehicle_command_s::CTRL_SWITCH_PID && ctrl_switch != _status.in_ndi)
+				{
+					_status.in_ndi = vehicle_command_s::CTRL_SWITCH_PID;
+					PX4_INFO("PID control has been activated!");
+				}
+				else if(ctrl_switch == _status.in_ndi)
+				{
+					// do nothing
+					if(ctrl_switch)
+						PX4_INFO("Already in NDI control!");
+					else
+						PX4_INFO("Already in PID control!");
+				}
+				else
+				{
+					PX4_INFO("Incorrect control switch signal!");
+				}
+				_status.timestamp = hrt_absolute_time();
+				_status_pub.publish(_status);
+			}
 			}
 		}
 		break;
@@ -1562,6 +1620,7 @@ Commander::handle_command(const vehicle_command_s &cmd)
 	case vehicle_command_s::VEHICLE_CMD_PAYLOAD_PREPARE_DEPLOY:
 	case vehicle_command_s::VEHICLE_CMD_PAYLOAD_CONTROL_DEPLOY:
 	case vehicle_command_s::VEHICLE_CMD_DO_VTOL_TRANSITION:
+	// case vehicle_command_s::VEHICLE_CMD_NDI_PID:
 	case vehicle_command_s::VEHICLE_CMD_DO_TRIGGER_CONTROL:
 	case vehicle_command_s::VEHICLE_CMD_DO_DIGICAM_CONTROL:
 	case vehicle_command_s::VEHICLE_CMD_DO_SET_CAM_TRIGG_DIST:
@@ -1777,6 +1836,60 @@ void Commander::executeActionRequest(const action_request_s &action_request)
 		}
 
 		break;
+
+	case action_request_s::ACTION_PID_TRANSITION_TO_NDI:{
+		uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};
+		if(_vehicle_status_sub.update(&_status)){
+		// _vehicle_status_sub.copy(&_status);
+			// deny transition between PID and NDI in ALL flight modes EXCEPT position mode
+			if (_status.nav_state == vehicle_status_s::NAVIGATION_STATE_POSCTL) {
+				mavlink_log_info(&_mavlink_log_pub, "NDI control has been activated\t");
+				events::send(events::ID("commander_ndi_activated"),
+				events::Log::Info, "NDI control has been activated");
+				if(!_status.in_ndi)
+				{
+					_status.in_ndi = vehicle_command_s::CTRL_SWITCH_NDI;
+				}
+				_status.timestamp = hrt_absolute_time();
+				_status_pub.publish(_status);
+			}
+			else
+			{
+				mavlink_log_critical(&_mavlink_log_pub, "Control method switch denied: not in POS mode\t");
+				events::send(events::ID("commander_ndi_denied_not_posctl"),
+				{events::Log::Critical, events::LogInternal::Info},
+				"Control method switch denied: not in POS mode");
+			}
+		}
+		break;
+	}
+
+	case action_request_s::ACTION_NDI_TRANSITION_TO_PID:{
+		uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};
+		if(_vehicle_status_sub.update(&_status)){
+		// _vehicle_status_sub.copy(&_status);
+			// deny transition between PID and NDI in ALL flight modes EXCEPT position mode
+			if (_status.nav_state == vehicle_status_s::NAVIGATION_STATE_POSCTL) {
+				mavlink_log_info(&_mavlink_log_pub, "PID control has been activated\t");
+				events::send(events::ID("commander_pid_activated"),
+				events::Log::Info, "PID control has been activated");
+				if(!_status.in_ndi)
+				{
+					_status.in_ndi = vehicle_command_s::CTRL_SWITCH_PID;
+				}
+				_status.timestamp = hrt_absolute_time();
+				_status_pub.publish(_status);
+			}
+			else
+			{
+				mavlink_log_critical(&_mavlink_log_pub, "Control method switch denied: not in POS mode\t");
+				events::send(events::ID("commander_pid_denied_not_posctl"),
+				{events::Log::Critical, events::LogInternal::Info},
+				"Control method switch denied: not in POS mode");
+			}
+		}
+		break;
+	}
 
 	case action_request_s::ACTION_SWITCH_MODE:
 

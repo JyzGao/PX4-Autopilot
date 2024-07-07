@@ -3,7 +3,8 @@
         {
             "name": "PX4",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/usr/include/gazebo-11/gazebo/msgs"
             ],
             "defines": [],
             "macFrameworkPath": [],

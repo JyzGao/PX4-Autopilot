@@ -1,0 +1,12 @@
+menuconfig MODULES_MC_RATE_CONTROL_NDI
+	bool "mc_rate_control_ndi"
+	default n
+	---help---
+		Enable support for mc_rate_control_ndi
+
+menuconfig USER_MC_RATE_CONTROL_NDI
+	bool "mc_rate_control_ndi running as userspace module"
+	default n
+	depends on BOARD_PROTECTED && MODULES_MC_RATE_CONTROL_NDI
+	---help---
+		Put mc_rate_control_ndi in userspace memory

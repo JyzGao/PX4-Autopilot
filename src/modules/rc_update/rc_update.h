@@ -218,6 +218,7 @@ private:
 		(ParamInt<px4::params::RC_MAP_KILL_SW>) _param_rc_map_kill_sw,
 		(ParamInt<px4::params::RC_MAP_ARM_SW>) _param_rc_map_arm_sw,
 		(ParamInt<px4::params::RC_MAP_TRANS_SW>) _param_rc_map_trans_sw,
+		(ParamInt<px4::params::RC_MAP_NDI_SW>) _param_rc_map_ndi_sw,
 		(ParamInt<px4::params::RC_MAP_GEAR_SW>) _param_rc_map_gear_sw,
 		(ParamInt<px4::params::RC_MAP_FLTM_BTN>) _param_rc_map_flightmode_buttons,
 
@@ -235,6 +236,7 @@ private:
 		(ParamFloat<px4::params::RC_KILLSWITCH_TH>) _param_rc_killswitch_th,
 		(ParamFloat<px4::params::RC_ARMSWITCH_TH>) _param_rc_armswitch_th,
 		(ParamFloat<px4::params::RC_TRANS_TH>) _param_rc_trans_th,
+		(ParamFloat<px4::params::RC_NDI_TH>) _param_rc_ndi_th,
 		(ParamFloat<px4::params::RC_GEAR_TH>) _param_rc_gear_th,
 		(ParamFloat<px4::params::RC_RETURN_TH>) _param_rc_return_th,
 

@@ -70,6 +70,11 @@ px4_add_romfs_files(
 	1060_rover
 	1061_r1_rover
 	1062_tf-r1
+	1063_amov_quadx
+	1064_amov_quadx_euler
+	1065_amov_quadx_ndi
+	1066_mugin2930
+	1067_mugin2930_ndi
 	1070_boat
 	3010_quadrotor_x
 	3011_hexarotor_x
