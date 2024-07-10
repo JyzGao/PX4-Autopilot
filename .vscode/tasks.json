@@ -16,13 +16,16 @@
             },
             "group": {
                 "kind": "build",
-                "isDefault": true,
+                "isDefault": true
             },
             "problemMatcher": {
                 "base": "$gcc",
-                "fileLocation": ["relative", "${command:cmake.buildDirectory}"]
+                "fileLocation": [
+                    "relative",
+                    "${command:cmake.buildDirectory}"
+                ]
             },
-            "presentation":{
+            "presentation": {
                 "echo": false,
                 "showReuseMessage": false,
                 "clear": true,
@@ -39,9 +42,9 @@
             },
             "group": {
                 "kind": "test",
-                "isDefault": true,
+                "isDefault": true
             },
-            "presentation":{
+            "presentation": {
                 "echo": true,
                 "showReuseMessage": false,
                 "clear": false,
@@ -57,13 +60,13 @@
                 "cwd": "${workspaceFolder}/Tools/jMAVSim"
             },
             "problemMatcher": [],
-            "presentation":{
+            "presentation": {
                 "echo": true,
                 "reveal": "never",
                 "focus": false,
                 "panel": "shared",
                 "showReuseMessage": false,
-                "clear": false,
+                "clear": false
             }
         },
         {
@@ -99,7 +102,7 @@
                     "background": {
                         "activeOnStart": true,
                         "beginsPattern": ".",
-                        "endsPattern": ".",
+                        "endsPattern": "."
                     }
                 }
             ]
@@ -126,13 +129,13 @@
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
-            "presentation":{
+            "presentation": {
                 "echo": true,
                 "reveal": "always",
                 "focus": false,
                 "panel": "shared",
                 "showReuseMessage": false,
-                "clear": false,
+                "clear": false
             }
         },
         {
@@ -170,7 +173,7 @@
                     "background": {
                         "activeOnStart": true,
                         "beginsPattern": ".",
-                        "endsPattern": ".",
+                        "endsPattern": "."
                     }
                 }
             ]
@@ -210,7 +213,7 @@
                     "background": {
                         "activeOnStart": true,
                         "beginsPattern": ".",
-                        "endsPattern": ".",
+                        "endsPattern": "."
                     }
                 }
             ]
@@ -250,7 +253,7 @@
                     "background": {
                         "activeOnStart": true,
                         "beginsPattern": ".",
-                        "endsPattern": ".",
+                        "endsPattern": "."
                     }
                 }
             ]
@@ -268,7 +271,9 @@
                 "clear": false
             },
             "problemMatcher": [],
-            "dependsOn":["px4_sitl_cleanup"]
+            "dependsOn": [
+                "px4_sitl_cleanup"
+            ]
         },
         {
             "label": "px4_sitl_cleanup",
@@ -283,7 +288,9 @@
                 "clear": false
             },
             "problemMatcher": [],
-            "dependsOn":["px4_kill"]
+            "dependsOn": [
+                "px4_kill"
+            ]
         },
         {
             "label": "px4_kill",
@@ -332,6 +339,13 @@
                 "clear": false
             },
             "problemMatcher": []
+        },
+        {
+            "type": "cmake",
+            "label": "CMake: 配置",
+            "command": "configure",
+            "problemMatcher": [],
+            "detail": "CMake 模板 配置 任务"
         }
     ],
     "inputs": [
@@ -349,7 +363,8 @@
               "tailsitter",
               "tiltrotor",
               "r1_rover",
-              "boat"
+              "boat",
+              "mugin2930"
             ],
             "default": "iris"
         },
@@ -363,6 +378,7 @@
                 "ksql_airport",
                 "mcmillan_airfield",
                 "sonoma_raceway",
+                "sjtu",
                 "warehouse",
                 "windy",
                 "yosemite"
