@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-#include "ActuatorEffectivenessStandardVTOL.hpp"
+#include "ActuatorEffectivenessStandardVTOL2.hpp"
 #include <ControlAllocation/ControlAllocation.hpp>
 
 using namespace matrix;
@@ -78,7 +78,7 @@ void ActuatorEffectivenessStandardVTOL2::updateSetpoint(const matrix::Vector<flo
 	}
 }
 
-void ActuatorEffectivenessStandardVTOL::setFlightPhase(const FlightPhase &flight_phase)
+void ActuatorEffectivenessStandardVTOL2::setFlightPhase(const FlightPhase &flight_phase)
 {
 	if (_flight_phase == flight_phase) {
 		return;

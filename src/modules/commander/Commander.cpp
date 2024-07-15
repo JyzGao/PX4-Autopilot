@@ -4626,6 +4626,8 @@ The commander module contains the state machine for mode switching and failsafe 
 	PRINT_MODULE_USAGE_COMMAND("takeoff");
 	PRINT_MODULE_USAGE_COMMAND("land");
 	PRINT_MODULE_USAGE_COMMAND_DESCR("transition", "VTOL transition");
+	PRINT_MODULE_USAGE_COMMAND_DESCR("ndi", "Switch to NDI control law");
+	PRINT_MODULE_USAGE_COMMAND_DESCR("pid", "Switch to PID control law");
 	PRINT_MODULE_USAGE_COMMAND_DESCR("mode", "Change flight mode");
 	PRINT_MODULE_USAGE_ARG("manual|acro|offboard|stabilized|altctl|posctl|auto:mission|auto:loiter|auto:rtl|auto:takeoff|auto:land|auto:precland",
 			"Flight mode", false);

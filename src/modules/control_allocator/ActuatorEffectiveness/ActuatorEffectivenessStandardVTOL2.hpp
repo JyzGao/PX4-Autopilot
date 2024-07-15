@@ -34,9 +34,9 @@
 /**
  * @file ActuatorEffectivenessStandardVTOL2.hpp
  *
- * Actuator effectiveness for standard VTOL
+ * Altered Actuator effectiveness for standard VTOL
  *
- * @author Julien Lecoeur <julien.lecoeur@gmail.com>
+ * @author Wenxuan Gao <jyz_john@sjtu.edu.cn>
  */
 
 #pragma once

@@ -70,6 +70,7 @@
 #include <uORB/topics/vehicle_status.h>
 #include <uORB/topics/vehicle_thrust_setpoint.h>
 #include <uORB/topics/vehicle_torque_setpoint.h>
+#include <uORB/topics/zero_input_response.h>
 
 using matrix::Eulerf;
 using matrix::Quatf;
@@ -116,6 +117,7 @@ private:
 	uORB::Subscription _vehicle_land_detected_sub{ORB_ID(vehicle_land_detected)};	/**< vehicle land detected subscription */
 	uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};			/**< vehicle status subscription */
 	uORB::Subscription _vehicle_rates_sub{ORB_ID(vehicle_angular_velocity)};
+	uORB::Subscription _zero_input_response_sub{ORB_ID(zero_input_response)};	/**< vehicle response with zero input */
 
 	uORB::SubscriptionData<airspeed_validated_s> _airspeed_validated_sub{ORB_ID(airspeed_validated)};
 
@@ -134,6 +136,7 @@ private:
 	vehicle_local_position_s		_local_pos {};		/**< local position */
 	vehicle_rates_setpoint_s		_rates_sp {};		/* attitude rates setpoint */
 	vehicle_status_s			_vehicle_status {};	/**< vehicle status */
+	zero_input_response_s 			_zero_input_response{};
 
 	perf_counter_t	_loop_perf;			/**< loop performance counter */
 

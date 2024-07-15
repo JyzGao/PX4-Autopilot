@@ -45,35 +45,6 @@
  */
 
 /**
- * Airspeed mode
- *
- * For small wings or VTOL without airspeed sensor this parameter can be used to
- * enable flying without an airspeed reading
- *
- * @value 0 Normal (use airspeed if available)
- * @value 1 Airspeed disabled
- * @group FW Attitude Control
- */
-PARAM_DEFINE_INT32(FW_ARSP_MODE, 0);
-
-/**
- * Enable airspeed scaling
- *
- * This enables a logic that automatically adjusts the output of the rate controller to take
- * into account the real torque produced by an aerodynamic control surface given
- * the current deviation from the trim airspeed (FW_AIRSPD_TRIM).
- *
- * Enable when using aerodynamic control surfaces (e.g.: plane)
- * Disable when using rotor wings (e.g.: autogyro)
- *
- * @boolean
- * @group FW Attitude Control
- */
-PARAM_DEFINE_INT32(FW_ARSP_SCALE_EN, 1);
-
-
-
-/**
  * Mass of the vehicle.
  *
  * @unit kg
@@ -136,7 +107,7 @@ PARAM_DEFINE_FLOAT(VEHICLE_AR, 10.0f);
 /**
  * Moment of inertia along X axis of the body frame.
  *
- * @unit kg*m^2
+ * @unit kg m^2
  * @min 0.0
  * @max 100.0
  * @decimal 1
@@ -148,7 +119,7 @@ PARAM_DEFINE_FLOAT(VEHICLE_I_XX, 5.0f);
 /**
  * Moment of inertia along Y axis of the body frame.
  *
- * @unit kg*m^2
+ * @unit kg m^2
  * @min 0.0
  * @max 100.0
  * @decimal 1
@@ -160,7 +131,7 @@ PARAM_DEFINE_FLOAT(VEHICLE_I_YY, 5.0f);
 /**
  * Moment of inertia along Z axis of the body frame.
  *
- * @unit kg*m^2
+ * @unit kg m^2
  * @min 0.0
  * @max 100.0
  * @decimal 1
@@ -172,7 +143,7 @@ PARAM_DEFINE_FLOAT(VEHICLE_I_ZZ, 10.0f);
 /**
  * Product of inertia w.r.t. X-Z plane of the body frame.
  *
- * @unit kg*m^2
+ * @unit kg m^2
  * @min 0.0
  * @max 10.0
  * @decimal 1

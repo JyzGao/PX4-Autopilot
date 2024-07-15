@@ -651,6 +651,14 @@ void FixedwingAttitudeControl::Run()
 		// FIXME: this should use _vcontrol_mode.landing_gear_pos in the future
 		_actuators.control[7] = _manual_control_setpoint.aux3;
 
+		if(_vehicle_status.in_ndi == true && _zero_input_response_sub.update(&_zero_input_response))
+		{
+			_actuators.control[actuator_controls_s::INDEX_ROLL] -= _zero_input_response.dx[3];
+			_actuators.control[actuator_controls_s::INDEX_PITCH] -= _zero_input_response.dx[4];
+			_actuators.control[actuator_controls_s::INDEX_YAW] -= _zero_input_response.dx[5];
+			_actuators.control[actuator_controls_s::INDEX_THROTTLE] -= _zero_input_response.dx[0];
+		}
+
 		/* lazily publish the setpoint only once available */
 		_actuators.timestamp = hrt_absolute_time();
 		_actuators.timestamp_sample = att.timestamp;

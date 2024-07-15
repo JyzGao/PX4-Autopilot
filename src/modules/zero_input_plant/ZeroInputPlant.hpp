@@ -79,7 +79,7 @@ using matrix::Quatf;
 using uORB::SubscriptionData;
 using namespace time_literals;
 
-static constexpr float CONSTANTS_ONE_G = 9.80665f;	// m/s^2
+// static constexpr float CONSTANTS_ONE_G = 9.80665f;	// m/s^2
 static constexpr hrt_abstime T_WIND_EST_TIMEOUT =
 	10_s; // time after which the wind estimate is disabled if no longer updating
 
@@ -120,7 +120,7 @@ private:
 
 	uORB::SubscriptionData<airspeed_validated_s> _airspeed_validated_sub{ORB_ID(airspeed_validated)};
 
-	uORB::Publication<zero_input_response_s>	_zero_input_response_pub{ORB_ID(zero_input_response)};
+	uORB::Publication<zero_input_response_s>     _zero_input_response_pub{ORB_ID(zero_input_response)};
 
 	vehicle_air_data_s 			_vehicle_air_data{};
 	vehicle_attitude_s 			_att{};			/**< vehicle attitude */
@@ -135,7 +135,7 @@ private:
 	hrt_abstime _last_run{0};
 
 	/* wind estimates */
-	Vector2f _wind_vel{0.0f, 0.0f}; 		///< wind velocity vector [m/s]
+	matrix::Vector2f _wind_vel{0.0f, 0.0f}; 		///< wind velocity vector [m/s]
 	bool _wind_valid{false}; 			///< flag if a valid wind estimate exists
 	hrt_abstime _time_wind_last_received{0}; 	///< last time wind estimate was received in microseconds. Used to detect timeouts.
 
@@ -189,6 +189,9 @@ private:
 	float _vehicle_cnrud;
 
 	DEFINE_PARAMETERS(
+		(ParamFloat<px4::params::FW_AIRSPD_MAX>) _param_fw_airspd_max,
+		(ParamFloat<px4::params::FW_AIRSPD_STALL>) _param_fw_airspd_stall,
+		(ParamFloat<px4::params::FW_AIRSPD_TRIM>) _param_fw_airspd_trim,
 		(ParamInt<px4::params::FW_ARSP_MODE>) _param_fw_arsp_mode,
 		(ParamInt<px4::params::FW_ARSP_SCALE_EN>) _param_fw_arsp_scale_en,
 

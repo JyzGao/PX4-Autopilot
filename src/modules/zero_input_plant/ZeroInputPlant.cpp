@@ -205,7 +205,7 @@ float ZeroInputPlant::get_airspeed_and_update_scaling()
 	return airspeed;
 }
 
-void FixedwingAttitudeControl::Run()
+void ZeroInputPlant::Run()
 {
 	if (should_exit()) {
 		_att_sub.unregisterCallback();
@@ -236,8 +236,8 @@ void FixedwingAttitudeControl::Run()
 			parameters_update();
 		}
 
-		const float dt = math::constrain((_att.timestamp - _last_run) * 1e-6f, 0.002f, 0.04f);
-		_last_run = _att.timestamp;
+		// const float dt = math::constrain((_att.timestamp - _last_run) * 1e-6f, 0.002f, 0.04f);
+		// _last_run = _att.timestamp;
 
 		/* get current rotation matrix and euler angles from control state quaternions */
 		matrix::Dcmf R = matrix::Quatf(_att.q);			// Dcmbe
@@ -250,8 +250,8 @@ void FixedwingAttitudeControl::Run()
 
 		_vehicle_air_data_sub.update(&_vehicle_air_data);
 		wind_poll();
-		const matrix::Vecor3f Va_e{_local_pos.vx-_wind_vel(0),_local_pos.vy-_wind_vel(1),_local_pos.vz};	// vehicle airspeed in the Earth frame
-		const matrix::Vecor3f uvw = R*Va_e;			// vehicle airspeed in body frame
+		const matrix::Vector3f Va_e{_local_pos.vx-_wind_vel(0),_local_pos.vy-_wind_vel(1),_local_pos.vz};	// vehicle airspeed in the Earth frame
+		const matrix::Vector3f uvw = R*Va_e;			// vehicle airspeed in body frame
 		const float u = uvw(0);					// u
 		const float v = uvw(1);					// v
 		const float w = uvw(2);					// w
@@ -324,7 +324,7 @@ void FixedwingAttitudeControl::Run()
 		matrix::Vector3f Ca{0.0f, 0.0f, 0.0f};
 		float cl_sa = _vehicle_cl0 + _vehicle_clalpha*alpha;
 		Ca(2) = cl_sa + _vehicle_c*_vehicle_clq*pitchspeed/2/airspeed;
-		float cd_sa = _vehicle_cd0 + cl_sa*cl_sa/float(M_PI)/0.9/_vehicle_ar;
+		float cd_sa = _vehicle_cd0 + cl_sa*cl_sa/float(M_PI)/0.9f/_vehicle_ar;
 		Ca(0) = cd_sa + _vehicle_c*_vehicle_cdq*pitchspeed/2/airspeed;
 		float cypr = (_vehicle_cyp*rollspeed+_vehicle_cyr*yawspeed)*_vehicle_b/2/airspeed;
 		Ca(1) = _vehicle_cy0 + _vehicle_cybeta*beta + cypr;
@@ -351,7 +351,7 @@ void FixedwingAttitudeControl::Run()
 		Cbody(2) = sinf(alpha)*cosf(beta)*Cwind(0)-sinf(alpha)*sinf(beta)*Cwind(1)+cosf(alpha)*Cwind(2);
 
 		// Calculate aerodynamic force
-		float dp = 0.5*_vehicle_air_data.rho*airspeed*airspeed;
+		float dp = 0.5f*_vehicle_air_data.rho*airspeed*airspeed;
 		matrix::Vector3f Force = _vehicle_s*dp*Cbody;
 
 		// Calculate gravity
@@ -361,10 +361,10 @@ void FixedwingAttitudeControl::Run()
 		// calculate Cma
 		matrix::Vector3f Cma{0.0f, 0.0f, 0.0f};
 		float crpr = (_vehicle_crp*rollspeed+_vehicle_crr*yawspeed)*_vehicle_b/2/airspeed;
-		Cma(0) = _vechile_b*(_vehicle_cr0 + crpr + _vehicle_crbeta*beta);
-		Cma(1) = _vechile_c*(_vehicle_cm0 + _vehicle_c*_vehicle_cmq*pitchspeed/2/airspeed + _vehicle_cmalpha*alpha);
+		Cma(0) = _vehicle_b*(_vehicle_cr0 + crpr + _vehicle_crbeta*beta);
+		Cma(1) = _vehicle_c*(_vehicle_cm0 + _vehicle_c*_vehicle_cmq*pitchspeed/2/airspeed + _vehicle_cmalpha*alpha);
 		float cnpr = (_vehicle_cnp*rollspeed+_vehicle_cnr*yawspeed)*_vehicle_b/2/airspeed;
-		Cma(2) = _vechile_b*(_vehicle_cn0 + cnpr + _vehicle_cnbeta*beta);
+		Cma(2) = _vehicle_b*(_vehicle_cn0 + cnpr + _vehicle_cnbeta*beta);
 
 		// Calculate aerodynamic moment
 		matrix::Vector3f Moment = (1-eta)*_vehicle_s*dp*Cma;
@@ -380,7 +380,7 @@ void FixedwingAttitudeControl::Run()
 		matrix::Vector3f domega{0.0f, 0.0f, 0.0f};
 		float den = _vehicle_ixx*_vehicle_izz - _vehicle_ixz*_vehicle_ixz;
 		domega(0) = (Moment(0)*_vehicle_izz+_vehicle_ixz*Moment(2)+_vehicle_ixz*rollspeed*pitchspeed*(_vehicle_ixx-_vehicle_iyy+_vehicle_izz)+pitchspeed*yawspeed*(_vehicle_izz*(_vehicle_iyy-_vehicle_izz)-_vehicle_ixz*_vehicle_ixz))/den;
-		domega(1) = (Moment(1)-rollspeed*yawspeed(_vehicle_ixx-_veicle_izz)-(rollspeed*rollspeed-yawspeed*yawspeed)*_vehicle_ixz)/_vehicle_iyy;
+		domega(1) = (Moment(1)-rollspeed*yawspeed*(_vehicle_ixx-_vehicle_izz)-(rollspeed*rollspeed-yawspeed*yawspeed)*_vehicle_ixz)/_vehicle_iyy;
 		domega(2) = (Moment(0)*_vehicle_ixz+_vehicle_ixx*Moment(2)+_vehicle_ixz*yawspeed*pitchspeed*(_vehicle_iyy-_vehicle_izz-_vehicle_ixx)+pitchspeed*rollspeed*(_vehicle_ixx*(_vehicle_ixx-_vehicle_iyy)+_vehicle_ixz*_vehicle_ixz))/den;
 
 		/* Prepare data for attitude controllers */
@@ -455,7 +455,7 @@ void FixedwingAttitudeControl::Run()
 			}
 		}
 
-		publishZeroInputResponse(angular_velocity.timestamp_sample);
+		publishZeroInputResponse(_angular_velocity.timestamp_sample);
 	}
 
 	perf_end(_loop_perf);
